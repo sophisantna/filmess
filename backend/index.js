@@ -1,11 +1,13 @@
 import express, { request, response } from "express"
 import mysql2 from "mysql2"
+import cors from "cors"
 
 const app = express()
 
 app.use(express.json())
+app.use(cors())
 
-app.post("/create-movie", (request, response) => {
+app.post("/create-filmes", (request, response) => {
     const { titulo, genero, duracao, classificacao } = request.body
 
     const insertCommand = "INSERT INTO filmes_SophiaSantanaDaniel(titulo, genero, duracao, classificacao) VALUES (?, ?, ?, ?)"
@@ -35,7 +37,7 @@ app.get("/all-movies", (request, response) => {
     })
 })
 
-app.delete("/delete-movie/:id", (request, response) => {
+app.delete("/delete-filmes/:id", (request, response) => {
     const { id } = request.params
 
     const deleteCommand = "DELETE FROM filmes_SophiaSantanaDaniel WHERE id=?"
@@ -52,7 +54,7 @@ app.delete("/delete-movie/:id", (request, response) => {
     })
 })
 
-app.put("/update-movie/:id", (request, response) => {
+app.put("/update-filmes/:id", (request, response) => {
     const { id } = request.params
     const { titulo, genero, duracao, classificacao } = request.body
 
@@ -70,7 +72,11 @@ app.put("/update-movie/:id", (request, response) => {
     })
 })
 
-app.listen(3000, () => console.log("Servidor ONLINE"))
+if (require.main === module) {
+    app.listen(3000, () => console.log("Servidor ONLINE"))
+}
+
+module.exports = app
 
 const sql = mysql2.createPool({
     host: "benserverplex.ddns.net",
